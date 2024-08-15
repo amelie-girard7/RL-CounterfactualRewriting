@@ -19,28 +19,6 @@ The model's reward function is based on two metrics:
 
 - **Δ𝑀2 = 𝑀 (Prediction, 𝑋𝐶𝐸 ) − 𝑀 (𝑌𝐸𝐸, 𝑋𝐶𝐸 )**: This metric measures how well the generated ending (Prediction) aligns with the counterfactual event (𝑋𝐶𝐸), normalized by the alignment between the edited ending (𝑌𝐸𝐸) and the counterfactual event. A higher Δ𝑀2 score indicates that the generated text aligns well with the counterfactual event, showing the model's ability to adapt the storyline logically given the counterfactual premise.
 
-### Repository structure 
-counterfactual-story-rewriting-rl/
-├── data/                              # Directory to store the dataset files
-│   ├── train.json                     # Training dataset
-│   ├── dev.json                       # Development/Validation dataset
-│   └── test.json                      # Test dataset
-├── src/                               # Main source code directory
-│   ├── __init__.py                    # Initialization file for the src module
-│   ├── config.py                      # Configuration settings for the project
-│   ├── data_loader.py                 # Script for loading and preprocessing data
-│   ├── main_rl.py                     # Main script to run the RL training loop
-│   ├── environment.py                 # Script defining the RL environment, including state, action, and reward functions
-│   └── utils/                         # Utility scripts including reward calculations and preprocessing
-│       ├── __init__.py                # Initialization file for utils
-│       ├── rewards.py                 # Functions to calculate Δ𝑀1, Δ𝑀2, and similarity
-│       └── preprocess.py              # Preprocessing functions for the dataset
-├── results/                           # Directory to save the results of the training (e.g., models, generated outputs)
-├── logs/                              # Directory to save training logs (e.g., TensorBoard logs)
-├── requirements.txt                   # List of dependencies required for the project
-├── README.md                          # Project README file
-└── LICENSE                            # License file for the project
-
 
 
 ### Usage
