@@ -1,6 +1,5 @@
-# src/environment.py
 import random
-from src.utils.rewards import calculate_delta_m1, calculate_delta_m2
+from utils.rewards import calculate_delta_m1, calculate_delta_m2
 
 class StoryEnvironment:
     def __init__(self, data):
