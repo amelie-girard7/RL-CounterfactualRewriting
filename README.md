@@ -1,49 +1,51 @@
 # Reinforcement Learning for Counterfactual Story Rewriting
-This repository leverages reinforcement learning to generate coherent story endings based on counterfactual scenarios. It features a custom metrics (Δ𝑀1, Δ𝑀2) identified in the paper "Training Objectives and Evaluation Metrics for Counterfactual Story Rewriting" for targeted reward functions, fine-tunes a T5 model, and offers a streamlined codebase for efficient training and evaluation.
+
+This repository contains the code for training a model using reinforcement learning to rewrite story endings based on counterfactual events. The model is rewarded based on two custom metrics: Δ𝑀1 and Δ𝑀2, which measure how well the generated ending aligns with the edited ending and the counterfactual scenario, respectively.
 
 ## Task Overview
-The task involves rewriting the endings of stories when a counterfactual event is introduced. The model is trained using reinforcement learning, where it interacts with an environment to generate story endings and receives rewards based on its performance against custom metrics.
+The task involves rewriting the endings of stories when a counterfactual event is introduced. The model is trained using reinforcement learning, where it interacts with an environment to generate story endings and receives rewards based on its performance against the Δ𝑀1 and Δ𝑀2 metrics.
 
-## Story Components
+### Story Components
 Each story consists of the following structured components:
-
 - **Premise (𝑋𝑃):** Sets the foundational scenario or context for the story.
 - **Initial Event (𝑋𝐼𝐸):** Introduces an event that leads to the original story's conclusion.
-- **Original Ending (𝑋𝑂𝐸):** The original conclusion of the story.
 - **Counterfactual Event (𝑋𝐶𝐸):** A divergent hypothetical event that alters the course of the story.
+- **Original Ending (𝑋𝑂𝐸):** The original conclusion of the story.
+- **Edited Ending (𝑌𝐸𝐸):** A modified ending that aligns with the counterfactual event.
 
-## Custom Reward Function
-The model's reward function is based on two custom metrics designed to evaluate the quality of the generated story endings:
+### Custom Reward Metrics
+The model's reward function is based on two metrics:
+- **Δ𝑀1 = 𝑀 (Prediction, 𝑌𝐸𝐸 ) − 𝑀 (Prediction, 𝑋𝑂𝐸 )**: This metric measures how much better the generated ending (Prediction) aligns with the edited ending (𝑌𝐸𝐸) compared to the original ending (𝑋𝑂𝐸). A higher Δ𝑀1 score indicates that the generated narrative is more similar to the edited ending, which reflects the model’s ability to make the necessary changes required by the counterfactual event.
 
-### Δ𝑀1
+- **Δ𝑀2 = 𝑀 (Prediction, 𝑋𝐶𝐸 ) − 𝑀 (𝑌𝐸𝐸, 𝑋𝐶𝐸 )**: This metric measures how well the generated ending (Prediction) aligns with the counterfactual event (𝑋𝐶𝐸), normalized by the alignment between the edited ending (𝑌𝐸𝐸) and the counterfactual event. A higher Δ𝑀2 score indicates that the generated text aligns well with the counterfactual event, showing the model's ability to adapt the storyline logically given the counterfactual premise.
 
-This metric measures how much better the model's prediction aligns with the edited ending compared to the original ending. The equation is as follows:
+### Repository structure 
+counterfactual-story-rewriting-rl/
+├── data/                              # Directory to store the dataset files
+│   ├── train.json                     # Training dataset
+│   ├── dev.json                       # Development/Validation dataset
+│   └── test.json                      # Test dataset
+├── src/                               # Main source code directory
+│   ├── __init__.py                    # Initialization file for the src module
+│   ├── config.py                      # Configuration settings for the project
+│   ├── data_loader.py                 # Script for loading and preprocessing data
+│   ├── main_rl.py                     # Main script to run the RL training loop
+│   ├── environment.py                 # Script defining the RL environment, including state, action, and reward functions
+│   └── utils/                         # Utility scripts including reward calculations and preprocessing
+│       ├── __init__.py                # Initialization file for utils
+│       ├── rewards.py                 # Functions to calculate Δ𝑀1, Δ𝑀2, and similarity
+│       └── preprocess.py              # Preprocessing functions for the dataset
+├── results/                           # Directory to save the results of the training (e.g., models, generated outputs)
+├── logs/                              # Directory to save training logs (e.g., TensorBoard logs)
+├── requirements.txt                   # List of dependencies required for the project
+├── README.md                          # Project README file
+└── LICENSE                            # License file for the project
 
-\[
-\Delta M_1 = M(\text{Prediction}, Y_{\text{EE}}) - M(\text{Prediction}, X_{\text{OE}})
-\]
 
-Where:
-- \( M \) is a conventional metric (e.g., ROUGE, BERTScore) used to assess the similarity between the prediction and the reference.
-- \( Y_{\text{EE}} \) is the edited ending.
-- \( X_{\text{OE}} \) is the original ending.
 
-### Δ𝑀2
+### Usage
 
-This metric evaluates how well the model's prediction aligns with the counterfactual event compared to the edited ending. The equation is as follows:
-
-\[
-\Delta M_2 = M(\text{Prediction}, X_{\text{CE}}) - M(Y_{\text{EE}}, X_{\text{CE}})
-\]
-
-Where:
-- \( M \) is a conventional metric used to assess the similarity between the prediction and the reference.
-- \( X_{\text{CE}} \) is the counterfactual event.
-- \( Y_{\text{EE}} \) is the edited ending.
-
-## Usage
-
-### Training the Model
+#### Training the Model
 To train the model using reinforcement learning:
 
 1. Clone the repository.
@@ -55,24 +57,5 @@ git clone https://github.com/yourusername/counterfactual-story-rewriting-rl.git
 cd counterfactual-story-rewriting-rl
 pip install -r requirements.txt
 python main_rl.py
-```
-
-
-## Project Structure
-
-The project structure will now be minimal and focused:
-
-```plaintext
-counterfactual-story-rewriting-rl/
-├── models/                  # Directory for storing trained models or model-related files.
-├── src/                     # Main source code directory.
-│   ├── models/              # Model-related scripts, including model_T5.py.
-│   ├── utils/               # Utility scripts including config, utils, and data_loader.
-│   │   ├── config.py        # Configuration settings for the project.
-│   │   ├── utils.py         # Essential utility functions.
-│   │   └── data_loader.py   # Data loading and preprocessing for RL.
-├── main_rl.py               # Main script to run the RL training.
-├── README.md                # Project README file.
-└── requirements.txt         # List of dependencies required for the project.
 ```
 
